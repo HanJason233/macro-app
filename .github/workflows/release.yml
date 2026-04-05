@@ -1,0 +1,44 @@
+name: Build And Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-release:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt pyinstaller
+
+      - name: Build executable
+        run: pyinstaller --clean MacroApp.spec
+
+      - name: Create zip package
+        shell: pwsh
+        run: Compress-Archive -LiteralPath "dist\MacroApp.exe" -DestinationPath "dist\MacroApp-windows-x64.zip" -Force
+
+      - name: Publish release assets
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/MacroApp-windows-x64.zip
+          generate_release_notes: true
+          draft: false
+          prerelease: false
