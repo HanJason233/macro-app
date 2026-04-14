@@ -17,17 +17,20 @@ from ..constants import ACTION_GROUPS
 ACTION_EMOJIS: dict[str, str] = {
     "键盘按键": "⌨️",
     "输入文本": "📝",
+    "点击": "🖱️",
     "绝对坐标点击": "🖱️",
     "窗口相对点击": "🎯",
     "识图点击": "🧩",
     "OCR文字点击": "🔤",
+    "鼠标拖动": "↔️",
+    "鼠标滑动": "🛞",
     "检测图片": "🔎",
     "检测文字": "🔠",
     "检测窗口分辨率": "📐",
     "获取窗口分辨率": "📏",
     "启动程序": "🚀",
     "关闭程序": "🛑",
-    "窗口大小": "🪟",
+    "设定窗口大小": "🪟",
     "最小化窗口": "📉",
 }
 
@@ -118,7 +121,7 @@ class BigNodeListWidget(QTreeWidget):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setHeaderLabels(["别名", "作用域正则", "多窗口模式"])
+        self.setHeaderLabels(["别名", "作用域正则", "多窗口模式", "流转", "节点间延迟(s)"])
         self.setRootIsDecorated(False)
         self.setAlternatingRowColors(True)
         self.itemSelectionChanged.connect(self._emit_row_changed)

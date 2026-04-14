@@ -28,6 +28,8 @@ def save_cropped_screenshot(left: int, top: int, right: int, bottom: int, target
 
 
 def _validate_template(template_path: str) -> Path:
+    if not str(template_path).strip():
+        raise RuntimeError("模板图片为空，请先截图或选择模板图片")
     path = Path(template_path).expanduser()
     if not path.exists() or not path.is_file():
         raise RuntimeError(f"模板图片不存在: {path}")

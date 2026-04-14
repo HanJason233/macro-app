@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import ctypes
+import os
 import sys
 
 from PySide6.QtWidgets import QApplication
@@ -40,7 +41,10 @@ def _enable_windows_dpi_awareness() -> None:
 
 
 def main() -> int:
-    _enable_windows_dpi_awareness()
+    # Qt6 already configures DPI awareness on Windows.
+    # Calling Windows DPI APIs here can cause Access Denied on Qt's own call.
+    if os.getenv("MACRO_APP_FORCE_LEGACY_DPI_AWARENESS") == "1":
+        _enable_windows_dpi_awareness()
     app = QApplication.instance() or QApplication(sys.argv)
     window = MainWindow()
     window.show()

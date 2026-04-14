@@ -111,6 +111,22 @@ def enumerate_windows() -> list[WindowInfo]:
     return sorted(windows, key=lambda item: item["title"].lower())
 
 
+def get_foreground_window() -> WindowInfo | None:
+    hwnd = int(user32.GetForegroundWindow())
+    if hwnd <= 0:
+        return None
+    if not user32.IsWindowVisible(hwnd):
+        return None
+    title = get_window_text(hwnd).strip()
+    if not title:
+        return None
+    try:
+        rect = get_window_rect(hwnd)
+    except Exception:
+        return None
+    return {"hwnd": hwnd, "title": title, "rect": rect}
+
+
 def bring_window_to_front(hwnd: int) -> None:
     user32.ShowWindow(hwnd, SW_RESTORE)
     user32.SetForegroundWindow(hwnd)
@@ -136,7 +152,8 @@ def resolve_scope_windows(
     scope_regex = (scope.get("regex") or "").strip()
     if not scope_regex:
         if selected_hwnd is None:
-            return []
+            foreground = get_foreground_window()
+            return [foreground] if foreground else []
         selected = next((item for item in cached_windows if item["hwnd"] == selected_hwnd), None)
         return [selected] if selected else []
 

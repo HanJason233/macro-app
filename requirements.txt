@@ -4,3 +4,4 @@ Pillow
 PySide6
 pyautogui
 rapidocr_onnxruntime
+onnxruntime
